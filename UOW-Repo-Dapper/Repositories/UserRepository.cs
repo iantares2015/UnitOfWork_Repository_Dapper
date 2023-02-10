@@ -36,6 +36,15 @@ public class UserRepository : IUserRepository
         return _sqlConnection.Query<User>(sql);
     }
 
+    public void Create(User user)
+    {
+        //todo: Тут отправляется запрос и возвращается Id только что созданного пользователя до коммита
+        var sql = "INSERT INTO Users (Name, CurrentBalance) VALUES (@Name, @CurrentBalance) RETURNING Id";
+        user.Id = _sqlConnection.Query<int>(sql, user, transaction: _dbTransaction).FirstOrDefault();
+        
+        _dbTransaction.Commit();
+    }
+
     public User GetUserDetails(int userId)
     {
         var sql = "SELECT * FROM Users WHERE Id=@userId";

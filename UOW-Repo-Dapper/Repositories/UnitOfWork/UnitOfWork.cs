@@ -3,7 +3,7 @@ using UOW_Repo_Dapper.Repositories.Interfaces;
 
 namespace UOW_Repo_Dapper.Repositories.UnitOfWork;
 
-public class UnitOfWork : IUnitofWork, IDisposable
+public class UnitOfWork : IUnitOfWork, IDisposable
 {
     public ITransferRepository TransferRepository { get; }
     public IUserRepository UserRepository { get; }

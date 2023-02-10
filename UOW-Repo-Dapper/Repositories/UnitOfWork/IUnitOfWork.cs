@@ -2,7 +2,7 @@
 
 namespace UOW_Repo_Dapper.Repositories.UnitOfWork;
 
-public interface IUnitofWork
+public interface IUnitOfWork
 {
     ITransferRepository TransferRepository { get; }
     IUserRepository UserRepository { get; }

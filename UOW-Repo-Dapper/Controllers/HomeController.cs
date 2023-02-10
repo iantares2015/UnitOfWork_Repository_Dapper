@@ -11,20 +11,14 @@ public class HomeController : ControllerBase
 {
     private readonly ILogger<HomeController> _logger;
 
-    private IUnitofWork _unitOfWork;
+    private IUnitOfWork _unitOfWork;
 
-    public HomeController(ILogger<HomeController> logger, IUnitofWork unitofWork)
+    public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
-        _unitOfWork = unitofWork;
+        _unitOfWork = unitOfWork;
     }
 
-    [HttpGet]
-    public IActionResult Get()
-    {
-        return Ok(_unitOfWork.UserRepository.GetAllUsers());
-    }
-    
     [HttpPost]
     public string TransferMoney(int sourceUserId, int targetUserId, double amount)
     {

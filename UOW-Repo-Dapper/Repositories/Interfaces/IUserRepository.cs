@@ -11,4 +11,6 @@ public interface IUserRepository
     User GetUserDetails(int userId);
 
     IEnumerable<User> GetAllUsers();
+
+    void Create(User user);
 }
