@@ -6,6 +6,6 @@ namespace UOW_Repo_Dapper.Repositories.Interfaces
     public interface ITransferRepository
     {
         bool AddNew(Transfer transfer);
-        public IEnumerable<TransactionViewModel> GetAllTransactionsByUserId(int userId);
+        IEnumerable<TransactionViewModel> GetAllTransactionsByUserId(int userId);
     }
 }
