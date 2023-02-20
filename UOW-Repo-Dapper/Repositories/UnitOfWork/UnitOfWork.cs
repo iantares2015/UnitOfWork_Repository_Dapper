@@ -12,6 +12,7 @@ public class UnitOfWork : IUnitOfWork
 
     private UserRepository? _userRepository;
     private TransferRepository? _transferRepository;
+    private ProductRepository? _productRepository;
 
     public UnitOfWork(string connectionString)
     {
@@ -27,6 +28,7 @@ public class UnitOfWork : IUnitOfWork
     
     public IUserRepository UserRepository => _userRepository ??= new UserRepository(_transaction);
     public ITransferRepository TransferRepository => _transferRepository ??= new TransferRepository(_transaction);
+    public IProductRepository ProductRepository => _productRepository ??= new ProductRepository(_transaction);
     
 
     public void Commit()
@@ -53,6 +55,7 @@ public class UnitOfWork : IUnitOfWork
     {
         _userRepository = null;
         _transferRepository = null;
+        _productRepository = null;
     }
 
     public void Dispose()

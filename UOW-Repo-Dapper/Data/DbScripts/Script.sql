@@ -14,6 +14,13 @@ CREATE TABLE Transfers
     Timestamp      TIMESTAMP NOT NULL
 );
 
+CREATE TABLE Products
+(
+    Id             SERIAL PRIMARY KEY,
+    Title          TEXT    NOT NULL,
+    Price          REAL      NOT NULL
+);
+
 -- Seed data
 INSERT INTO Users (Name, CurrentBalance)
 VALUES ('User A', 1000.00);

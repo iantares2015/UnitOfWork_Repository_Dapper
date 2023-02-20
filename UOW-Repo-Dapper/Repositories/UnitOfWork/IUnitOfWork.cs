@@ -7,6 +7,7 @@ public interface IUnitOfWork : IDisposable
 {
     IUserRepository UserRepository { get; }
     ITransferRepository TransferRepository { get; }
+    IProductRepository ProductRepository { get; }
 
     void Commit();
 }
