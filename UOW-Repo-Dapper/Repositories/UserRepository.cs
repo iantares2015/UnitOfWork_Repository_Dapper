@@ -1,53 +1,60 @@
 ﻿using System.Data;
 using Dapper;
 using Npgsql;
+using NpgsqlTypes;
 using UOW_Repo_Dapper.Models;
+using UOW_Repo_Dapper.Models.ViewModels;
 using UOW_Repo_Dapper.Repositories.Interfaces;
 
 namespace UOW_Repo_Dapper.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository : RepositoryBase, IUserRepository
 {
-    private NpgsqlConnection _sqlConnection;
-
-    private IDbTransaction _dbTransaction;
-
-    public UserRepository(NpgsqlConnection sqlConnection, IDbTransaction dbTransaction)
+    public UserRepository(IDbTransaction transaction) : base(transaction)
     {
-        _dbTransaction = dbTransaction;
-        _sqlConnection = sqlConnection;
     }
-
+    
     public bool Credit(int userId, double amount)
     {
         var sql = "UPDATE Users SET CurrentBalance = CurrentBalance + @amount WHERE Id = @userId";
-        return _sqlConnection.Execute(sql, new { userId = userId, amount = amount }, transaction: _dbTransaction) > 0;
+        return Connection.Execute(sql, new { userId = userId, amount = amount }, transaction: Transaction) > 0;
     }
 
     public bool Debit(int userId, double amount)
     {
         var sql = "UPDATE Users SET CurrentBalance = CurrentBalance - @amount WHERE Id = @userId";
-        return _sqlConnection.Execute(sql, new { userId = userId, amount = amount }, transaction: _dbTransaction) > 0;
+        return Connection.Execute(sql, new { userId = userId, amount = amount }, transaction: Transaction) > 0;
     }
 
     public IEnumerable<User> GetAllUsers()
     {
         var sql = "SELECT * FROM Users";
-        return _sqlConnection.Query<User>(sql);
+        return Connection.Query<User>(sql);
     }
 
     public void Create(User user)
     {
-        //todo: Тут отправляется запрос и возвращается Id только что созданного пользователя до коммита
+        // Тут отправляется запрос и возвращается Id только что созданного пользователя до коммита
         var sql = "INSERT INTO Users (Name, CurrentBalance) VALUES (@Name, @CurrentBalance) RETURNING Id";
-        user.Id = _sqlConnection.Query<int>(sql, user, transaction: _dbTransaction).FirstOrDefault();
+        user.Id = Connection.Query<int>(sql, user, transaction: Transaction).FirstOrDefault();
         
-        _dbTransaction.Commit();
+        Transaction.Commit();
     }
 
     public User GetUserDetails(int userId)
     {
-        var sql = "SELECT * FROM Users WHERE Id=@userId";
-        return _sqlConnection.QueryFirst<User>(sql, new { userId = userId }, transaction: _dbTransaction);
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("_val", userId);
+        
+
+        var sql = "public.assign_demo";
+        
+        var user = Connection.QueryFirstOrDefault<UserDetails>(sql, parameters, commandType: CommandType.StoredProcedure);
+
+
+        Console.WriteLine();
+        
+        
+        return new User();
     }
 }

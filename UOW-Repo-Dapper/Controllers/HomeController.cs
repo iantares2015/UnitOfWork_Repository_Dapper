@@ -19,6 +19,14 @@ public class HomeController : ControllerBase
         _unitOfWork = unitOfWork;
     }
 
+    [HttpGet]
+    public IActionResult GetTransactionsByUserId(int userId)
+    {
+        var transactions = _unitOfWork.TransferRepository.GetAllTransactionsByUserId(userId);
+
+        return Ok(transactions);
+    }
+
     [HttpPost]
     public string TransferMoney(int sourceUserId, int targetUserId, double amount)
     {
@@ -31,7 +39,6 @@ public class HomeController : ControllerBase
                 return "Недопустимая сумма";
             }
 
-            
             //Получить исходный баланс пользователя
             User sourceUser = _unitOfWork.UserRepository.GetUserDetails(sourceUserId);
 

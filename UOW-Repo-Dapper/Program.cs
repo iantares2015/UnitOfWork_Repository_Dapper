@@ -1,23 +1,15 @@
-using System.Data;
-using Npgsql;
-using UOW_Repo_Dapper.Repositories;
-using UOW_Repo_Dapper.Repositories.Interfaces;
+using UOW_Repo_Dapper.Models;
 using UOW_Repo_Dapper.Repositories.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped((s) => new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IDbTransaction>(s =>
-{
-    NpgsqlConnection connection = s.GetRequiredService<NpgsqlConnection>();
-    connection.Open();
-    return connection.BeginTransaction();
-});
-// Add services to the container.
 
-builder.Services.AddScoped<ITransferRepository, TransferRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+// UnitOfWork
+builder.Services.AddScoped<IUnitOfWork>(_ => new UnitOfWork(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// IOptionsMonitor
+builder.Services.Configure<Numb>(builder.Configuration.GetSection(nameof(Numb)));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,7 +24,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "UOW-Repo-Dapper v1"));
 }
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
